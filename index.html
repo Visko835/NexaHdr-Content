@@ -8,110 +8,115 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  @font-face {
-    font-family: 'Neu Eichmass';
-    src: url('fonts/Neu_Eichmass.woff2') format('woff2');
-    font-weight: 400; font-style: normal; font-display: swap;
-  }
-  :root {
-    --color-bg: #050505; --color-text: #f0f0f0; --color-text-dim: #888888;
-    --color-accent: #ff3333; --color-accent-soft: rgba(255, 51, 51, 0.15);
-    --glass-bg: rgba(255, 255, 255, 0.03); --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-hover: rgba(255, 255, 255, 0.07);
-    --font-display: 'Neu Eichmass', 'Anton', 'Impact', sans-serif;
-    --font-heading: 'Space Grotesk', sans-serif;
-    --font-body: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --font-stat: 'Bebas Neue', sans-serif;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { height: 100%; }
-  body { min-height: 100%; background-color: var(--color-bg); font-family: var(--font-body); color: var(--color-text); overflow-y: auto; line-height: 1.6; }
-  .bg-layer { position: fixed; inset: 0; pointer-events: none; }
-  .bg-base { z-index: 1; background-color: var(--color-bg); }
-  .bg-red { z-index: 2; background: radial-gradient(ellipse 60% 70% at 20% 40%, #ff0000 0%, #990000 50%, transparent 70%), radial-gradient(ellipse 50% 60% at 70% 80%, #e60000 0%, #800000 40%, transparent 70%); opacity: 0.7; animation: redPulse 18s ease-in-out infinite alternate; }
-  .bg-gray { z-index: 3; background: radial-gradient(ellipse 50% 60% at 75% 30%, #ffffff 0%, #808080 45%, transparent 70%), radial-gradient(ellipse 40% 50% at 30% 85%, #f0f0f0 0%, #999999 30%, transparent 65%); opacity: 0.5; animation: grayDrift 22s ease-in-out infinite alternate; }
-  .bg-mauve { z-index: 4; background: radial-gradient(circle at 60% 50%, #c8a0a0 0%, transparent 30%), radial-gradient(circle at 25% 70%, #b08080 0%, transparent 25%); opacity: 0.3; animation: mauveFloat 26s ease-in-out infinite alternate; }
-  .bg-noise { z-index: 5; opacity: 0.03; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>"); }
-  @keyframes redPulse { 0% { transform: scale(1) translate(0, 0); opacity: 0.7; } 100% { transform: scale(1.05) translate(-1%, 1%); opacity: 0.75; } }
-  @keyframes grayDrift { 0% { transform: translate(0, 0); } 100% { transform: translate(-2%, 1.5%); } }
-  @keyframes mauveFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(1.5%, -1.5%) scale(1.03); } }
+  @font-face { font-family: 'Neu Eichmass'; src: url('fonts/Neu_Eichmass.woff2') format('woff2'); font-display: swap; }
+  :root { --color-bg:#050505; --color-text:#f0f0f0; --color-text-dim:#888; --color-accent:#ff3333; --glass-bg:rgba(255,255,255,0.03); --glass-border:rgba(255,255,255,0.08); --glass-hover:rgba(255,255,255,0.07); --font-display:'Neu Eichmass',sans-serif; --font-heading:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace; }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;} html{height:100%;} body{min-height:100%;background:var(--color-bg);font-family:var(--font-body);color:var(--color-text);overflow-y:auto;line-height:1.6;}
+  
+  /* ===== LOADING SCREEN ===== */
+  .loader{position:fixed;inset:0;z-index:9999;background:var(--color-bg);display:flex;align-items:center;justify-content:center;transition:opacity 0.6s ease, visibility 0.6s ease;}
+  .loader.hidden{opacity:0;visibility:hidden;}
+  .loader-content{text-align:center;}
+  .loader-brand{font-family:var(--font-display);font-size:clamp(2rem,8vw,3.5rem);text-transform:uppercase;letter-spacing:0.05em;background:linear-gradient(135deg,#fff 0%,#f33 60%,#c8a0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:loaderFade 1.5s ease-in-out;}
+  .loader-bar{width:200px;height:2px;background:rgba(255,255,255,0.1);margin:20px auto 0;border-radius:2px;overflow:hidden;}
+  .loader-bar::after{content:'';display:block;width:40%;height:100%;background:linear-gradient(90deg,#f33,#fff);animation:loaderSlide 1.2s ease-in-out infinite;}
+  @keyframes loaderFade{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
+  @keyframes loaderSlide{0%{transform:translateX(-100%);}100%{transform:translateX(350%);}}
 
-  .container { position: relative; z-index: 10; max-width: 640px; margin: 0 auto; padding: 60px 24px; min-height: 100vh; display: flex; flex-direction: column; }
-  .brand { font-family: var(--font-display); font-size: clamp(3rem, 12vw, 5rem); font-weight: 400; letter-spacing: 0.03em; text-transform: uppercase; line-height: 0.9; background: linear-gradient(135deg, #ffffff 0%, #ff4444 60%, #c8a0a0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; text-shadow: 0 0 40px rgba(255, 0, 0, 0.2); }
-  .tagline { font-family: var(--font-mono); font-size: 0.85rem; color: var(--color-text-dim); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 48px; padding-left: 2px; }
-  .menu-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
-  .menu-card { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 12px; padding: 24px; text-decoration: none; color: var(--color-text); display: flex; align-items: center; gap: 20px; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); position: relative; overflow: hidden; }
-  .menu-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent); transform: translateX(-100%); transition: transform 0.6s ease; }
-  .menu-card:hover { background: var(--glass-hover); border-color: rgba(255, 51, 51, 0.3); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
-  .menu-card:hover::before { transform: translateX(100%); }
-  .icon-box { width: 48px; height: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05); }
-  .icon-box svg { width: 24px; height: 24px; stroke: var(--color-text); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-  .menu-info h3 { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 500; margin-bottom: 4px; }
-  .menu-info p { font-size: 0.9rem; color: var(--color-text-dim); font-weight: 300; }
-  .card-disabled { opacity: 0.4; pointer-events: none; }
+  /* ===== BACKGROUND ===== */
+  .bg-layer{position:fixed;inset:0;pointer-events:none;} .bg-base{z-index:1;background:var(--color-bg);} .bg-red{z-index:2;background:radial-gradient(ellipse 60% 70% at 20% 40%,#f00 0%,#900 50%,transparent 70%),radial-gradient(ellipse 50% 60% at 70% 80%,#e00 0%,#800 40%,transparent 70%);opacity:.7;animation:rp 18s ease-in-out infinite alternate;} .bg-gray{z-index:3;background:radial-gradient(ellipse 50% 60% at 75% 30%,#fff 0%,#808080 45%,transparent 70%),radial-gradient(ellipse 40% 50% at 30% 85%,#f0f0f0 0%,#999 30%,transparent 65%);opacity:.5;animation:gd 22s ease-in-out infinite alternate;} .bg-mauve{z-index:4;background:radial-gradient(circle at 60% 50%,#c8a0a0 0%,transparent 30%),radial-gradient(circle at 25% 70%,#b08080 0%,transparent 25%);opacity:.3;animation:mf 26s ease-in-out infinite alternate;} .bg-noise{z-index:5;opacity:.03;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");}
+  @keyframes rp{0%{transform:scale(1);}100%{transform:scale(1.05) translate(-1%,1%);}} @keyframes gd{0%{transform:translate(0,0);}100%{transform:translate(-2%,1.5%);}} @keyframes mf{0%{transform:translate(0,0) scale(1);}100%{transform:translate(1.5%,-1.5%) scale(1.03);}}
 
-  .social-links { display: flex; gap: 16px; justify-content: center; margin-top: auto; padding-top: 32px; }
-  .social-link { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--color-text-dim); transition: all 0.3s ease; }
-  .social-link:hover { background: var(--glass-hover); border-color: var(--color-accent); color: var(--color-text); transform: translateY(-2px); }
-  .social-link svg { width: 20px; height: 20px; fill: currentColor; }
-  .footer { text-align: center; font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-dim); margin-top: 24px; }
+  .container{position:relative;z-index:10;max-width:640px;margin:0 auto;padding:60px 24px;min-height:100vh;display:flex;flex-direction:column;}
+  
+  /* ===== SCROLL ANIMATIONS ===== */
+  .animate-on-scroll{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94),transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);}
+  .animate-on-scroll.visible{opacity:1;transform:translateY(0);}
+  .animate-on-scroll.reverse{transform:translateY(-40px);}
+  .animate-on-scroll.reverse.visible{transform:translateY(0);}
+
+  .brand{font-family:var(--font-display);font-size:clamp(3rem,12vw,5rem);font-weight:400;letter-spacing:0.03em;text-transform:uppercase;line-height:0.9;background:linear-gradient(135deg,#fff 0%,#f44 60%,#c8a0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;text-shadow:0 0 40px rgba(255,0,0,0.2);}
+  .tagline{font-family:var(--font-mono);font-size:0.85rem;color:var(--color-text-dim);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:48px;padding-left:2px;}
+  .menu-grid{display:flex;flex-direction:column;gap:16px;margin-bottom:48px;}
+  
+  .menu-card{background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:12px;padding:24px;text-decoration:none;color:var(--color-text);display:flex;align-items:center;gap:20px;transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);position:relative;overflow:hidden;}
+  .menu-card::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.03),transparent);transform:translateX(-100%);transition:transform 0.6s ease;}
+  .menu-card:hover{background:var(--glass-hover);border-color:rgba(255,51,51,0.3);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.4);}
+  .menu-card:hover::before{transform:translateX(100%);}
+  .icon-box{width:48px;height:48px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border-radius:10px;border:1px solid rgba(255,255,255,0.05);}
+  .icon-box svg{width:24px;height:24px;stroke:var(--color-text);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+  .menu-info h3{font-family:var(--font-heading);font-size:1.15rem;font-weight:500;margin-bottom:4px;}
+  .menu-info p{font-size:0.9rem;color:var(--color-text-dim);font-weight:300;}
+  .card-disabled{opacity:0.4;pointer-events:none;}
+
+  .social-links{display:flex;gap:16px;justify-content:center;margin-top:auto;padding-top:32px;}
+  .social-link{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--color-text-dim);transition:all 0.3s ease;}
+  .social-link:hover{background:var(--glass-hover);border-color:var(--color-accent);color:var(--color-text);transform:translateY(-2px);}
+  .social-link svg{width:20px;height:20px;fill:currentColor;}
+  .footer{text-align:center;font-family:var(--font-mono);font-size:0.75rem;color:var(--color-text-dim);margin-top:24px;}
 </style>
 </head>
 <body>
+  <!-- Loading Screen -->
+  <div class="loader" id="loader">
+    <div class="loader-content">
+      <div class="loader-brand">NexaHdr</div>
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+
   <div class="bg-layer bg-base"></div><div class="bg-layer bg-red"></div><div class="bg-layer bg-gray"></div><div class="bg-layer bg-mauve"></div><div class="bg-layer bg-noise"></div>
 
   <div class="container">
-    <h1 class="brand">NexaHdr</h1>
-    <p class="tagline">// digital artifacts & savedata repository</p>
+    <h1 class="brand animate-on-scroll">NexaHdr</h1>
+    <p class="tagline animate-on-scroll">// digital artifacts & savedata repository</p>
 
     <div class="menu-grid">
-      <a href="menu1.html" class="menu-card">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-        </div>
-        <div class="menu-info">
-          <h3>Game Savedata</h3>
-          <p>Curated save files with video previews</p>
-        </div>
+      <a href="menu1.html" class="menu-card animate-on-scroll">
+        <div class="icon-box"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg></div>
+        <div class="menu-info"><h3>Game Savedata</h3><p>Curated save files with video previews</p></div>
       </a>
       
-      <a href="about.html" class="menu-card">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        </div>
-        <div class="menu-info">
-          <h3>About NexaHdr</h3>
-          <p>Learn more about the channel</p>
-        </div>
+      <a href="about.html" class="menu-card animate-on-scroll">
+        <div class="icon-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div>
+        <div class="menu-info"><h3>About NexaHdr</h3><p>Learn more about the channel</p></div>
       </a>
       
-      <div class="menu-card card-disabled">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-        </div>
-        <div class="menu-info">
-          <h3>Restricted Module</h3>
-          <p>Access pending...</p>
-        </div>
+      <div class="menu-card card-disabled animate-on-scroll">
+        <div class="icon-box"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+        <div class="menu-info"><h3>Restricted Module</h3><p>Access pending...</p></div>
       </div>
     </div>
 
-    <div class="social-links">
-      <a href="https://youtube.com/@nexadr" target="_blank" class="social-link" title="YouTube">
-        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-      </a>
-      <a href="https://instagram.com/nexahdr" target="_blank" class="social-link" title="Instagram">
-        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-      </a>
-      <a href="https://tiktok.com/@nexahdr" target="_blank" class="social-link" title="TikTok">
-        <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.1z"/></svg>
-      </a>
+    <div class="social-links animate-on-scroll">
+      <a href="https://youtube.com/@nexahdr" target="_blank" class="social-link" title="YouTube"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+      <a href="https://instagram.com/nexahdr" target="_blank" class="social-link" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+      <a href="https://tiktok.com/@nexahdr" target="_blank" class="social-link" title="TikTok"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.1z"/></svg></a>
     </div>
 
-    <div class="footer">
-      <p>&copy; 2026 NexaHdr. All rights reserved.</p>
-    </div>
+    <div class="footer animate-on-scroll"><p>&copy; 2026 NexaHdr. All rights reserved.</p></div>
   </div>
+
+  <script>
+    // Loading screen
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+      }, 1500);
+    });
+
+    // Scroll animations with Intersection Observer
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
