@@ -8,30 +8,69 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  @font-face { font-family: 'Neu Eichmass'; src: url('fonts/Neu_Eichmass.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
-  :root { --color-bg:#050505; --color-text:#f0f0f0; --color-text-dim:#888; --color-accent:#ff3333; --glass-bg:rgba(255,255,255,0.03); --glass-border:rgba(255,255,255,0.08); --glass-hover:rgba(255,255,255,0.07); --font-display:'Neu Eichmass','Anton',sans-serif; --font-heading:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace; }
+  @font-face { font-family: 'Neu Eichmass'; src: url('fonts/Neu_Eichmass.woff2') format('woff2'); font-display: swap; }
+  :root { --color-bg:#050505; --color-text:#f0f0f0; --color-text-dim:#888; --color-accent:#ff3333; --glass-bg:rgba(255,255,255,0.03); --glass-border:rgba(255,255,255,0.08); --glass-hover:rgba(255,255,255,0.07); --font-display:'Neu Eichmass',sans-serif; --font-heading:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace; }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;} html{height:100%;} body{min-height:100%;background:var(--color-bg);font-family:var(--font-body);color:var(--color-text);overflow-y:auto;line-height:1.6;}
+
+  /* ===== LOADING SCREEN ===== */
+  .loader{position:fixed;inset:0;z-index:9999;background:var(--color-bg);display:flex;align-items:center;justify-content:center;transition:opacity 0.6s ease, visibility 0.6s ease;}
+  .loader.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  .loader-content{text-align:center;}
+  .loader-brand{font-family:var(--font-display);font-size:clamp(2rem,8vw,3.5rem);text-transform:uppercase;letter-spacing:0.05em;background:linear-gradient(135deg,#fff 0%,#f33 60%,#c8a0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:loaderFade 1.2s ease-in-out;}
+  .loader-bar{width:200px;height:2px;background:rgba(255,255,255,0.1);margin:20px auto 0;border-radius:2px;overflow:hidden;}
+  .loader-bar::after{content:'';display:block;width:40%;height:100%;background:linear-gradient(90deg,#f33,#fff);animation:loaderSlide 1.2s ease-in-out infinite;}
+  @keyframes loaderFade{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
+  @keyframes loaderSlide{0%{transform:translateX(-100%);}100%{transform:translateX(350%);}}
+
+  /* ===== BACKGROUND ===== */
   .bg-layer{position:fixed;inset:0;pointer-events:none;} .bg-base{z-index:1;background:var(--color-bg);} .bg-red{z-index:2;background:radial-gradient(ellipse 60% 70% at 20% 40%,#f00 0%,#900 50%,transparent 70%),radial-gradient(ellipse 50% 60% at 70% 80%,#e00 0%,#800 40%,transparent 70%);opacity:.7;animation:rp 18s ease-in-out infinite alternate;} .bg-gray{z-index:3;background:radial-gradient(ellipse 50% 60% at 75% 30%,#fff 0%,#808080 45%,transparent 70%),radial-gradient(ellipse 40% 50% at 30% 85%,#f0f0f0 0%,#999 30%,transparent 65%);opacity:.5;animation:gd 22s ease-in-out infinite alternate;} .bg-mauve{z-index:4;background:radial-gradient(circle at 60% 50%,#c8a0a0 0%,transparent 30%),radial-gradient(circle at 25% 70%,#b08080 0%,transparent 25%);opacity:.3;animation:mf 26s ease-in-out infinite alternate;} .bg-noise{z-index:5;opacity:.03;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");}
   @keyframes rp{0%{transform:scale(1);}100%{transform:scale(1.05) translate(-1%,1%);}} @keyframes gd{0%{transform:translate(0,0);}100%{transform:translate(-2%,1.5%);}} @keyframes mf{0%{transform:translate(0,0) scale(1);}100%{transform:translate(1.5%,-1.5%) scale(1.03);}}
+
   .container{position:relative;z-index:10;max-width:640px;margin:0 auto;padding:40px 24px;}
-  .back-btn{display:inline-flex;align-items:center;gap:8px;color:var(--color-text-dim);text-decoration:none;font-family:var(--font-mono);font-size:.8rem;margin-bottom:32px;transition:color .3s;}
-  .back-btn:hover{color:var(--color-text);} .back-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;}
-  .page-title{font-family:var(--font-display);font-size:clamp(2.2rem,8vw,3rem);font-weight:400;text-transform:uppercase;letter-spacing:.03em;line-height:.95;margin-bottom:32px;padding-left:16px;border-left:3px solid var(--color-accent);}
-  .content-card{background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:12px;padding:28px;margin-bottom:20px;}
-  .content-card h2{font-family:var(--font-heading);font-size:1.3rem;margin-bottom:12px;color:var(--color-accent);}
-  .content-card p{color:var(--color-text-dim);font-size:.95rem;margin-bottom:12px;line-height:1.7;}
+
+  .back-btn{display:inline-flex;align-items:center;gap:8px;color:var(--color-text-dim);text-decoration:none;font-family:var(--font-mono);font-size:0.8rem;margin-bottom:32px;transition:color 0.3s ease;}
+  .back-btn:hover{color:var(--color-text);}
+  .back-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;}
+
+  /* ===== PAGE TITLE WITH REVEAL EFFECT ===== */
+  .page-title{font-family:var(--font-display);font-size:clamp(2.2rem,8vw,3rem);font-weight:400;text-transform:uppercase;letter-spacing:0.03em;line-height:0.95;margin-bottom:32px;padding-left:16px;border-left:3px solid var(--color-accent);position:relative;overflow:hidden;}
+  .page-title .title-text{display:inline-block;opacity:0;transform:translateX(-40px);transition:opacity 0.8s ease,transform 0.8s ease;}
+  .page-title.visible .title-text{opacity:1;transform:translateX(0);}
+  .page-title::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,var(--color-accent),transparent);transform:translateX(-100%);transition:transform 1s cubic-bezier(0.77,0,0.175,1);}
+  .page-title.visible::after{transform:translateX(100%);}
+
+  /* ===== SCROLL ANIMATIONS ===== */
+  .animate-on-scroll{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94),transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);}
+  .animate-on-scroll.visible{opacity:1;transform:translateY(0);}
+
+  .content-card{background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:12px;padding:28px;margin-bottom:20px;transition:all 0.4s ease;}
+  .content-card:hover{border-color:rgba(255,51,51,0.2);transform:translateY(-2px);}
+  .content-card h2{font-family:var(--font-heading);font-size:1.3rem;margin-bottom:12px;color:var(--color-accent);font-weight:500;}
+  .content-card p{color:var(--color-text-dim);font-size:0.95rem;margin-bottom:12px;line-height:1.7;}
   .content-card strong{color:var(--color-text);}
+
   .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0;}
-  .stat-box{background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:16px;text-align:center;}
+  .stat-box{background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:16px;text-align:center;transition:all 0.3s ease;}
+  .stat-box:hover{background:rgba(255,255,255,0.06);transform:translateY(-2px);}
   .stat-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--color-accent);line-height:1;}
-  .stat-label{font-family:var(--font-mono);font-size:.7rem;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;}
-  .faq-item{border-bottom:1px solid var(--glass-border);padding:16px 0;}
+  .stat-label{font-family:var(--font-mono);font-size:0.7rem;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px;}
+
+  .faq-item{border-bottom:1px solid var(--glass-border);padding:16px 0;transition:all 0.3s ease;}
   .faq-item:last-child{border-bottom:none;}
-  .faq-q{font-family:var(--font-heading);font-weight:500;margin-bottom:6px;color:var(--color-text);}
-  .faq-a{font-size:.9rem;color:var(--color-text-dim);}
+  .faq-item:hover{padding-left:8px;}
+  .faq-q{font-family:var(--font-heading);font-weight:500;margin-bottom:6px;color:var(--color-text);font-size:1rem;}
+  .faq-a{font-size:0.9rem;color:var(--color-text-dim);line-height:1.6;}
 </style>
 </head>
 <body>
+  <!-- Loading Screen -->
+  <div class="loader" id="loader">
+    <div class="loader-content">
+      <div class="loader-brand">NexaHdr</div>
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+
   <div class="bg-layer bg-base"></div><div class="bg-layer bg-red"></div><div class="bg-layer bg-gray"></div><div class="bg-layer bg-mauve"></div><div class="bg-layer bg-noise"></div>
 
   <div class="container">
@@ -40,15 +79,15 @@
       <span>return_to_root</span>
     </a>
     
-    <h1 class="page-title">About</h1>
+    <h1 class="page-title"><span class="title-text">About NexaHdr</span></h1>
 
-    <div class="content-card">
+    <div class="content-card animate-on-scroll">
       <h2>Who is NexaHdr?</h2>
       <p><strong>NexaHdr</strong> is a digital artifacts repository and gaming channel focused on curated save files, mods, and experimental gameplay data. Every artifact is tested, documented, and shared with a companion video walkthrough.</p>
       <p>What started as a personal archive has grown into a community-driven collection of gameplay milestones.</p>
     </div>
 
-    <div class="content-card">
+    <div class="content-card animate-on-scroll">
       <div class="stat-grid">
         <div class="stat-box">
           <div class="stat-num">15+</div>
@@ -65,7 +104,7 @@
       </div>
     </div>
 
-    <div class="content-card">
+    <div class="content-card animate-on-scroll">
       <h2>Frequently Asked</h2>
       <div class="faq-item">
         <div class="faq-q">Are the save files safe?</div>
@@ -79,7 +118,48 @@
         <div class="faq-q">Can I request a specific game?</div>
         <div class="faq-a">Drop a comment on the YouTube channel. Priority goes to subscriber requests.</div>
       </div>
+      <div class="faq-item">
+        <div class="faq-q">Is this free?</div>
+        <div class="faq-a">100% free. Consider subscribing or sharing the channel to support the project.</div>
+      </div>
+    </div>
+
+    <div class="content-card animate-on-scroll">
+      <h2>Connect</h2>
+      <p>Follow NexaHdr across platforms for updates, behind-the-scenes, and early access to new artifacts.</p>
+      <p style="margin-top:16px;">
+        <strong style="color:var(--color-accent);">YouTube:</strong> @nexahdr<br>
+        <strong style="color:var(--color-accent);">Instagram:</strong> @nexahdr<br>
+        <strong style="color:var(--color-accent);">TikTok:</strong> @nexahdr
+      </p>
     </div>
   </div>
+
+  <script>
+    // Loading screen
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+        // Trigger title reveal after loader
+        setTimeout(() => {
+          document.querySelector('.page-title').classList.add('visible');
+        }, 300);
+      }, 1500);
+    });
+
+    // Scroll animations with IntersectionObserver (repeats on scroll up/down)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          // Remove class when out of view so animation repeats
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
