@@ -8,231 +8,107 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  @font-face {
-    font-family: 'Neu Eichmass';
-    src: url('fonts/Neu_Eichmass.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
+  @font-face { font-family: 'Neu Eichmass'; src: url('fonts/Neu_Eichmass.woff2') format('woff2'); font-display: swap; }
+  :root { --color-bg:#050505; --color-text:#f0f0f0; --color-text-dim:#888; --color-accent:#ff3333; --color-accent-soft:rgba(255,51,51,0.15); --glass-bg:rgba(10,10,10,0.6); --glass-border:rgba(255,255,255,0.08); --glass-hover:rgba(20,20,20,0.8); --font-display:'Neu Eichmass',sans-serif; --font-heading:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace; --font-stat:'Bebas Neue',sans-serif; }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;} html{height:100%;} body{min-height:100%;background:var(--color-bg);font-family:var(--font-body);color:var(--color-text);overflow-x:hidden;overflow-y:auto;line-height:1.6;}
 
-  :root {
-    --color-bg: #050505;
-    --color-text: #f0f0f0;
-    --color-text-dim: #888888;
-    --color-accent: #ff3333;
-    --color-accent-soft: rgba(255, 51, 51, 0.15);
-    --glass-bg: rgba(10, 10, 10, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-hover: rgba(20, 20, 20, 0.8);
-    
-    --font-display: 'Neu Eichmass', 'Anton', 'Impact', sans-serif;
-    --font-heading: 'Space Grotesk', sans-serif;
-    --font-body: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --font-stat: 'Bebas Neue', sans-serif;
-  }
+  /* ===== LOADING SCREEN ===== */
+  .loader{position:fixed;inset:0;z-index:9999;background:var(--color-bg);display:flex;align-items:center;justify-content:center;transition:opacity 0.6s ease, visibility 0.6s ease;}
+  .loader.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  .loader-content{text-align:center;}
+  .loader-brand{font-family:var(--font-display);font-size:clamp(2rem,8vw,3.5rem);text-transform:uppercase;letter-spacing:0.05em;background:linear-gradient(135deg,#fff 0%,#f33 60%,#c8a0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:loaderFade 1.2s ease-in-out;}
+  .loader-bar{width:200px;height:2px;background:rgba(255,255,255,0.1);margin:20px auto 0;border-radius:2px;overflow:hidden;}
+  .loader-bar::after{content:'';display:block;width:40%;height:100%;background:linear-gradient(90deg,#f33,#fff);animation:loaderSlide 1.2s ease-in-out infinite;}
+  @keyframes loaderFade{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
+  @keyframes loaderSlide{0%{transform:translateX(-100%);}100%{transform:translateX(350%);}}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { height: 100%; }
-  body {
-    min-height: 100%; background-color: var(--color-bg);
-    font-family: var(--font-body); color: var(--color-text);
-    overflow-y: auto; line-height: 1.6;
-  }
+  /* ===== BACKGROUND ===== */
+  .bg-layer{position:fixed;inset:0;pointer-events:none;} .bg-base{z-index:1;background:var(--color-bg);} .bg-red{z-index:2;background:radial-gradient(ellipse 60% 70% at 20% 40%,#f00 0%,#900 50%,transparent 70%),radial-gradient(ellipse 50% 60% at 70% 80%,#e00 0%,#800 40%,transparent 70%);opacity:.7;animation:rp 18s ease-in-out infinite alternate;} .bg-gray{z-index:3;background:radial-gradient(ellipse 50% 60% at 75% 30%,#fff 0%,#808080 45%,transparent 70%),radial-gradient(ellipse 40% 50% at 30% 85%,#f0f0f0 0%,#999 30%,transparent 65%);opacity:.5;animation:gd 22s ease-in-out infinite alternate;} .bg-mauve{z-index:4;background:radial-gradient(circle at 60% 50%,#c8a0a0 0%,transparent 30%),radial-gradient(circle at 25% 70%,#b08080 0%,transparent 25%);opacity:.3;animation:mf 26s ease-in-out infinite alternate;} .bg-noise{z-index:5;opacity:.03;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");}
+  @keyframes rp{0%{transform:scale(1);}100%{transform:scale(1.05) translate(-1%,1%);}} @keyframes gd{0%{transform:translate(0,0);}100%{transform:translate(-2%,1.5%);}} @keyframes mf{0%{transform:translate(0,0) scale(1);}100%{transform:translate(1.5%,-1.5%) scale(1.03);}}
 
-  .bg-layer { position: fixed; inset: 0; pointer-events: none; }
-  .bg-base { z-index: 1; background-color: var(--color-bg); }
-  .bg-red { z-index: 2; background: radial-gradient(ellipse 60% 70% at 20% 40%, #ff0000 0%, #990000 50%, transparent 70%), radial-gradient(ellipse 50% 60% at 70% 80%, #e60000 0%, #800000 40%, transparent 70%); opacity: 0.7; animation: redPulse 18s ease-in-out infinite alternate; }
-  .bg-gray { z-index: 3; background: radial-gradient(ellipse 50% 60% at 75% 30%, #ffffff 0%, #808080 45%, transparent 70%), radial-gradient(ellipse 40% 50% at 30% 85%, #f0f0f0 0%, #999999 30%, transparent 65%); opacity: 0.5; animation: grayDrift 22s ease-in-out infinite alternate; }
-  .bg-mauve { z-index: 4; background: radial-gradient(circle at 60% 50%, #c8a0a0 0%, transparent 30%), radial-gradient(circle at 25% 70%, #b08080 0%, transparent 25%); opacity: 0.3; animation: mauveFloat 26s ease-in-out infinite alternate; }
-  .bg-noise { z-index: 5; opacity: 0.03; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>"); }
-  @keyframes redPulse { 0% { transform: scale(1) translate(0, 0); opacity: 0.7; } 100% { transform: scale(1.05) translate(-1%, 1%); opacity: 0.75; } }
-  @keyframes grayDrift { 0% { transform: translate(0, 0); } 100% { transform: translate(-2%, 1.5%); } }
-  @keyframes mauveFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(1.5%, -1.5%) scale(1.03); } }
+  .container{position:relative;z-index:10;max-width:900px;margin:0 auto;padding:40px 24px;}
 
-  .container { position: relative; z-index: 10; max-width: 640px; margin: 0 auto; padding: 40px 24px; }
+  .back-btn{display:inline-flex;align-items:center;gap:8px;color:var(--color-text-dim);text-decoration:none;font-family:var(--font-mono);font-size:0.8rem;margin-bottom:32px;transition:color 0.3s ease;}
+  .back-btn:hover{color:var(--color-text);}
+  .back-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;}
 
-  .back-btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    color: var(--color-text-dim); text-decoration: none;
-    font-family: var(--font-mono); font-size: 0.8rem;
-    margin-bottom: 32px; transition: color 0.3s ease;
-  }
-  .back-btn:hover { color: var(--color-text); }
-  .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  /* ===== PAGE TITLE REVEAL ===== */
+  .page-title{font-family:var(--font-display);font-size:clamp(2.2rem,8vw,3rem);font-weight:400;text-transform:uppercase;letter-spacing:0.03em;line-height:0.95;margin-bottom:32px;padding-left:16px;border-left:3px solid var(--color-accent);position:relative;overflow:hidden;}
+  .page-title .title-text{display:inline-block;opacity:0;transform:translateX(-30px);transition:opacity 0.8s ease,transform 0.8s ease;}
+  .page-title.visible .title-text{opacity:1;transform:translateX(0);}
+  .page-title::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,var(--color-accent),transparent);transform:translateX(-100%);transition:transform 1s cubic-bezier(0.77,0,0.175,1);}
+  .page-title.visible::after{transform:translateX(100%);}
 
-  .page-title {
-    font-family: var(--font-display);
-    font-size: clamp(2.2rem, 8vw, 3rem);
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    line-height: 0.95;
-    margin-bottom: 32px;
-    padding-left: 16px;
-    border-left: 3px solid var(--color-accent);
-  }
+  /* ===== SEARCH & FILTER ===== */
+  .controls{display:flex;flex-direction:column;gap:12px;margin-bottom:32px;}
+  .search-box{position:relative;}
+  .search-box input{width:100%;padding:12px 16px 12px 44px;background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:10px;color:var(--color-text);font-family:var(--font-body);font-size:0.95rem;transition:all 0.3s ease;}
+  .search-box input:focus{outline:none;border-color:var(--color-accent);background:var(--glass-hover);}
+  .search-box svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:20px;height:20px;stroke:var(--color-text-dim);fill:none;stroke-width:2;}
 
-  /* Search & Filter */
-  .controls {
-    display: flex; flex-direction: column; gap: 12px;
-    margin-bottom: 32px;
-  }
-  .search-box {
-    position: relative;
-  }
-  .search-box input {
-    width: 100%; padding: 12px 16px 12px 44px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    border-radius: 10px;
-    color: var(--color-text);
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-  }
-  .search-box input:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    background: var(--glass-hover);
-  }
-  .search-box svg {
-    position: absolute; left: 14px; top: 50%;
-    transform: translateY(-50%);
-    width: 20px; height: 20px;
-    stroke: var(--color-text-dim);
-    fill: none; stroke-width: 2;
-  }
+  .filter-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .filter-btn{padding:8px 16px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;color:var(--color-text-dim);font-family:var(--font-mono);font-size:0.8rem;cursor:pointer;transition:all 0.3s ease;}
+  .filter-btn:hover{background:var(--glass-hover);color:var(--color-text);}
+  .filter-btn.active{background:var(--color-accent-soft);border-color:var(--color-accent);color:var(--color-accent);}
 
-  .filter-row {
-    display: flex; gap: 10px; flex-wrap: wrap;
-  }
-  .filter-btn {
-    padding: 8px 16px;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 8px;
-    color: var(--color-text-dim);
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  .filter-btn:hover {
-    background: var(--glass-hover);
-    color: var(--color-text);
-  }
-  .filter-btn.active {
-    background: var(--color-accent-soft);
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-  }
-
-  .link-list { display: flex; flex-direction: column; gap: 24px; }
+  /* ===== HORIZONTAL SCROLL CARDS ===== */
+  .cards-wrapper{position:relative;min-height:280px;}
   
-  .link-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px; overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-  .link-card:hover {
-    border-color: rgba(255, 51, 51, 0.3);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  }
+  .cards-scroll{display:flex;gap:16px;overflow-x:auto;overflow-y:hidden;padding:10px 0 20px 0;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--color-accent) rgba(255,255,255,0.05);}
+  .cards-scroll::-webkit-scrollbar{height:6px;}
+  .cards-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);border-radius:3px;}
+  .cards-scroll::-webkit-scrollbar-thumb{background:var(--color-accent);border-radius:3px;}
 
-  .yt-thumb {
-    width: 100%; aspect-ratio: 16/9; object-fit: cover;
-    background: #0a0a0a; display: block; border-bottom: 1px solid var(--glass-border);
-  }
+  .link-card{flex:0 0 260px;background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:12px;overflow:hidden;transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);cursor:pointer;}
+  .link-card:hover{border-color:rgba(255,51,51,0.3);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.5);}
 
-  .card-body { padding: 20px; }
-  
-  .card-meta {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 10px;
-  }
-  .card-date {
-    font-family: var(--font-mono);
-    font-size: 0.7rem; color: var(--color-accent);
-    text-transform: uppercase; letter-spacing: 0.1em;
-  }
-  .card-version {
-    font-family: var(--font-stat);
-    font-size: 0.9rem;
-    color: var(--color-text-dim);
-    letter-spacing: 0.05em;
-  }
+  .yt-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#0a0a0a;display:block;border-bottom:1px solid var(--glass-border);}
 
-  .card-title {
-    font-family: var(--font-heading);
-    font-size: 1.1rem; font-weight: 500; margin-bottom: 8px;
-    line-height: 1.4;
-  }
+  .card-body{padding:14px;}
+  .card-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .card-date{font-family:var(--font-mono);font-size:0.65rem;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.1em;}
+  .card-version{font-family:var(--font-stat);font-size:0.8rem;color:var(--color-text-dim);letter-spacing:0.05em;}
 
-  .card-description {
-    font-size: 0.85rem;
-    color: var(--color-text-dim);
-    margin-bottom: 16px;
-    line-height: 1.5;
-  }
+  .card-title{font-family:var(--font-heading);font-size:0.95rem;font-weight:500;margin-bottom:10px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 
-  .card-tags {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-  .tag {
-    padding: 4px 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--color-text-dim);
-  }
+  .btn-download{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-decoration:none;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--color-text);padding:10px;border-radius:8px;font-family:var(--font-body);font-size:0.8rem;font-weight:500;transition:all 0.3s ease;}
+  .btn-download:hover{background:var(--color-accent);border-color:var(--color-accent);color:#fff;}
+  .btn-download svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
 
-  .btn-download {
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    width: 100%; text-decoration: none;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--color-text); padding: 12px;
-    border-radius: 8px; font-family: var(--font-body);
-    font-size: 0.9rem; font-weight: 500;
-    transition: all 0.3s ease;
-  }
-  .btn-download:hover {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    color: #ffffff;
-  }
-  .btn-download svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+  /* ===== SEARCH RESULTS (VERTICAL LIST) ===== */
+  .search-results{display:none;flex-direction:column;gap:16px;animation:fadeInUp 0.5s ease;}
+  .search-results.active{display:flex;}
+  .search-results .link-card{flex:none;width:100%;}
 
-  .loading {
-    text-align: center; color: var(--color-text-dim);
-    font-family: var(--font-mono); font-size: 0.85rem;
-    margin-top: 60px;
-  }
+  @keyframes fadeInUp{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
 
-  .no-results {
-    text-align: center;
-    color: var(--color-text-dim);
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    margin-top: 40px;
-  }
+  /* ===== CARD ANIMATIONS ===== */
+  .card-fly-out-right{animation:flyOutRight 0.5s ease forwards;}
+  .card-fly-out-left{animation:flyOutLeft 0.5s ease forwards;}
+  .card-fly-in{animation:flyIn 0.5s ease forwards;}
+
+  @keyframes flyOutRight{0%{opacity:1;transform:translateX(0) scale(1);}100%{opacity:0;transform:translateX(200px) scale(0.8) rotate(5deg);}}
+  @keyframes flyOutLeft{0%{opacity:1;transform:translateX(0) scale(1);}100%{opacity:0;transform:translateX(-200px) scale(0.8) rotate(-5deg);}}
+  @keyframes flyIn{0%{opacity:0;transform:translateY(30px) scale(0.9);}100%{opacity:1;transform:translateY(0) scale(1);}}
+
+  .loading,.no-results{text-align:center;color:var(--color-text-dim);font-family:var(--font-mono);font-size:0.85rem;margin-top:60px;}
+
+  /* ===== SCROLL INDICATOR ===== */
+  .scroll-hint{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--color-text-dim);font-family:var(--font-mono);font-size:0.75rem;margin-top:16px;opacity:0.6;}
+  .scroll-hint svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;animation:scrollHint 1.5s ease-in-out infinite;}
+  @keyframes scrollHint{0%,100%{transform:translateX(0);}50%{transform:translateX(6px);}}
 </style>
 </head>
 <body>
-  <div class="bg-layer bg-base"></div>
-  <div class="bg-layer bg-red"></div>
-  <div class="bg-layer bg-gray"></div>
-  <div class="bg-layer bg-mauve"></div>
-  <div class="bg-layer bg-noise"></div>
+  <!-- Loading Screen -->
+  <div class="loader" id="loader">
+    <div class="loader-content">
+      <div class="loader-brand">NexaHdr</div>
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+
+  <div class="bg-layer bg-base"></div><div class="bg-layer bg-red"></div><div class="bg-layer bg-gray"></div><div class="bg-layer bg-mauve"></div><div class="bg-layer bg-noise"></div>
 
   <div class="container">
     <a href="index.html" class="back-btn">
@@ -240,7 +116,7 @@
       <span>return_to_root</span>
     </a>
     
-    <h1 class="page-title">Game Savedata</h1>
+    <h1 class="page-title"><span class="title-text">Game Savedata</span></h1>
 
     <div class="controls">
       <div class="search-box">
@@ -251,15 +127,33 @@
         <button class="filter-btn active" data-filter="all">All</button>
       </div>
     </div>
-    
-    <div id="link-list" class="link-list">
-      <p class="loading">> initializing_data_stream...</p>
+
+    <div class="cards-wrapper">
+      <div id="cardsScroll" class="cards-scroll">
+        <p class="loading">> initializing_data_stream...</p>
+      </div>
+      <div id="searchResults" class="search-results"></div>
+      <div class="scroll-hint">
+        <span>scroll</span>
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
     </div>
   </div>
 
   <script>
     let allData = [];
     let currentFilter = 'all';
+    let isSearchMode = false;
+
+    // Loading screen
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+        setTimeout(() => {
+          document.querySelector('.page-title').classList.add('visible');
+        }, 300);
+      }, 1500);
+    });
 
     function getYouTubeID(url) {
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -267,8 +161,27 @@
       return (match && match[2].length === 11) ? match[2] : null;
     }
 
-    function renderCards(data) {
-      const container = document.getElementById('link-list');
+    function createCardHTML(item) {
+      const ytID = getYouTubeID(item.youtube_url);
+      const thumbUrl = ytID ? `https://img.youtube.com/vi/${ytID}/mqdefault.jpg` : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340" fill="%23111"><text x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23444" font-family="monospace">NO_PREVIEW</text></svg>';
+      
+      return `
+        <img src="${thumbUrl}" alt="Preview" class="yt-thumb" loading="lazy">
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-date">${item.date}</span>
+            ${item.version ? `<span class="card-version">v${item.version}</span>` : ''}
+          </div>
+          <div class="card-title">${item.title}</div>
+          <a href="${item.download_url}" target="_blank" rel="noopener noreferrer" class="btn-download" onclick="event.stopPropagation()">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Download</span>
+          </a>
+        </div>`;
+    }
+
+    function renderHorizontalCards(data) {
+      const container = document.getElementById('cardsScroll');
       container.innerHTML = '';
 
       if (data.length === 0) {
@@ -276,32 +189,65 @@
         return;
       }
 
-      data.forEach(item => {
-        const ytID = getYouTubeID(item.youtube_url);
-        const thumbUrl = ytID ? `https://img.youtube.com/vi/${ytID}/mqdefault.jpg` : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340" fill="%23111"><text x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23444" font-family="monospace">NO_PREVIEW</text></svg>';
-
-        const tags = item.tags ? item.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : '';
-
+      data.forEach((item, i) => {
         const card = document.createElement('div');
-        card.className = 'link-card';
-        card.innerHTML = `
-          <img src="${thumbUrl}" alt="Preview" class="yt-thumb" loading="lazy">
-          <div class="card-body">
-            <div class="card-meta">
-              <span class="card-date">${item.date}</span>
-              ${item.version ? `<span class="card-version">v${item.version}</span>` : ''}
-            </div>
-            <div class="card-title">${item.title}</div>
-            ${item.description ? `<div class="card-description">${item.description}</div>` : ''}
-            ${tags ? `<div class="card-tags">${tags}</div>` : ''}
-            <a href="${item.download_url}" target="_blank" rel="noopener noreferrer" class="btn-download">
-              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              <span>Download Artifact</span>
-            </a>
-          </div>
-        `;
+        card.className = 'link-card card-fly-in';
+        card.style.animationDelay = `${i * 0.08}s`;
+        card.innerHTML = createCardHTML(item);
         container.appendChild(card);
       });
+    }
+
+    function renderSearchResults(data) {
+      const container = document.getElementById('searchResults');
+      container.innerHTML = '';
+
+      if (data.length === 0) {
+        container.innerHTML = '<p class="no-results">> no_results_match_query.</p>';
+        return;
+      }
+
+      data.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'link-card card-fly-in';
+        card.style.animationDelay = `${i * 0.1}s`;
+        card.innerHTML = createCardHTML(item);
+        container.appendChild(card);
+      });
+    }
+
+    function triggerSearchAnimation(searchTerm) {
+      const scrollContainer = document.getElementById('cardsScroll');
+      const searchResults = document.getElementById('searchResults');
+      const cards = scrollContainer.querySelectorAll('.link-card');
+
+      if (searchTerm === '') {
+        // Exit search mode
+        isSearchMode = false;
+        searchResults.classList.remove('active');
+        scrollContainer.style.display = 'flex';
+        document.querySelector('.scroll-hint').style.display = 'flex';
+        return;
+      }
+
+      // Enter search mode
+      isSearchMode = true;
+
+      // Fly out existing cards (alternating left/right)
+      cards.forEach((card, i) => {
+        card.style.animationDelay = `${i * 0.05}s`;
+        card.classList.add(i % 2 === 0 ? 'card-fly-out-right' : 'card-fly-out-left');
+      });
+
+      // After fly-out animation, show search results
+      setTimeout(() => {
+        scrollContainer.style.display = 'none';
+        document.querySelector('.scroll-hint').style.display = 'none';
+        
+        const filtered = filterData();
+        renderSearchResults(filtered);
+        searchResults.classList.add('active');
+      }, 500);
     }
 
     function filterData() {
@@ -320,7 +266,7 @@
         );
       }
 
-      renderCards(filtered);
+      return filtered;
     }
 
     function buildFilters() {
@@ -336,30 +282,49 @@
           document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           currentFilter = btn.dataset.filter;
-          filterData();
+          if (isSearchMode) {
+            const filtered = filterData();
+            renderSearchResults(filtered);
+          } else {
+            renderHorizontalCards(filterData());
+          }
         };
         filterRow.appendChild(btn);
       });
     }
 
-    document.getElementById('searchInput').addEventListener('input', filterData);
+    // Search input handler
+    let searchTimeout;
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        triggerSearchAnimation(e.target.value);
+      }, 300);
+    });
+
     document.querySelector('[data-filter="all"]').onclick = () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       document.querySelector('[data-filter="all"]').classList.add('active');
       currentFilter = 'all';
-      filterData();
+      if (isSearchMode) {
+        const filtered = filterData();
+        renderSearchResults(filtered);
+      } else {
+        renderHorizontalCards(filterData());
+      }
     };
 
+    // Fetch data
     fetch('menu1_data.json?v=' + Date.now())
       .then(res => res.json())
       .then(data => {
         allData = data.reverse();
         buildFilters();
-        renderCards(allData);
+        renderHorizontalCards(allData);
       })
       .catch(err => {
         console.error(err);
-        document.getElementById('link-list').innerHTML = '<p class="loading" style="color: #ff3333;">> error: failed_to_fetch_data.</p>';
+        document.getElementById('cardsScroll').innerHTML = '<p class="loading" style="color:#ff3333;">> error: failed_to_fetch_data.</p>';
       });
   </script>
 </body>
